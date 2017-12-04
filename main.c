@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdbool.h>
 #include<stdlib.h>
+#include<string.h>
+
 
 #define ARRAY_LENGTH(array) (sizeof((array))/sizeof((array)[0]))
 
@@ -41,22 +43,22 @@ struct reserve_station *resv_stations;
 void init_config_params(char *filepath) {
 	FILE *fin;
 	char *line;
-	int read, i;
+	int read, i, rc;
 	char* token, *param;
 	int value;
 	int add_nr_reservation, mul_nr_reservation, div_nr_reservation;
 	int add_delay, mul_delay, div_delay;
 
-	fin = fopen(filepath, "r");
-	if (!fin) {
+	rc = fopen_s(&fin, filepath, "r");
+	if (rc) {
 		printf("File doesn't open\n");
 		return;
 	}
 
 	while ((read = getline(&line, NULL, fin)) != -1) {
-		token = strtok(line, " =");
-		param = strtok(NULL, " =");
-		value = (int)strtol(strtok(NULL, " ="), NULL, 0);
+		token = strtok_s(line, " =", NULL);
+		param = strtok_s(NULL, " =", NULL);
+		value = (int)strtol(strtok_s(NULL, " =", NULL), NULL, 0);
 
 		if (!strcmp(param, "add_nr_units")) {
 			MAX_UNITS[ADD_TYPE] = value;
